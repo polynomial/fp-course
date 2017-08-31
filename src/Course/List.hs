@@ -132,12 +132,13 @@ map ::
   (a -> b)
   -> List a
   -> List b
-map = 
-(a :. b)
+map f Nil = Nil
+map f (h :. t) = f h :. map f t
 
-take head of list
-apply function
-create new list with old list + new element
+-- take head of list
+-- apply function
+-- create new list with old list + new element
+
 
 -- | Return elements satisfying the given predicate.
 --
