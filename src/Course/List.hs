@@ -118,7 +118,7 @@ sum = foldRight (+) 0
 length ::
   List a
   -> Int
-length = foldRight (\x -> \y -> y + 1) 0
+length = foldRight (\_ -> \y -> y + 1) 0
 
 -- | Map the given function on each element of the list.
 --
@@ -132,13 +132,8 @@ map ::
   (a -> b)
   -> List a
   -> List b
-map f Nil = Nil
+map _ Nil = Nil
 map f (h :. t) = f h :. map f t
-
--- take head of list
--- apply function
--- create new list with old list + new element
-
 
 -- | Return elements satisfying the given predicate.
 --
@@ -154,8 +149,14 @@ filter ::
   (a -> Bool)
   -> List a
   -> List a
-filter =
-  error "todo: Course.List#filter"
+filter _ Nil = Nil
+filter f (h :. t) =
+  if f h
+    then h :. filter f t
+    else filter f t
+-- filter f (h :. t)
+--   | f h = h :. filter f t
+--   | otherwise = filter f t 
 
 -- | Append two lists to a new list.
 --
@@ -173,9 +174,8 @@ filter =
   List a
   -> List a
   -> List a
-(++) =
-  error "todo: Course.List#(++)"
-
+(++) Nil l = l
+(++) (h :. t) l = h :. t ++ l
 infixr 5 ++
 
 -- | Flatten a list of lists to a list.
@@ -191,8 +191,10 @@ infixr 5 ++
 flatten ::
   List (List a)
   -> List a
-flatten =
-  error "todo: Course.List#flatten"
+flatten Nil = Nil
+flatten (Nil :. _) = Nil
+flatten ((h0 :. t0) :. Nil) = (h0 :. t0) ++ Nil
+flatten ((h0 :. t0) :. (h1 :. t1)) = (h0 :. t0) ++ flatten (h1 :. t1)
 
 -- | Map a function then flatten to a list.
 --
@@ -208,8 +210,11 @@ flatMap ::
   (a -> List b)
   -> List a
   -> List b
-flatMap =
-  error "todo: Course.List#flatMap"
+flatMap _ Nil = Nil
+flatMap f (h :. t) = f h ++ flatMap f t
+
+-- map over the list of a with f
+-- append to list
 
 -- | Flatten a list of lists to a list (again).
 -- HOWEVER, this time use the /flatMap/ function that you just wrote.
