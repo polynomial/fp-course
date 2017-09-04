@@ -173,7 +173,7 @@ filter f (h :. t) =
 (++) ::
   List a
   -> List a
-  -> List a
+  -> List a 
 (++) Nil l = l
 (++) (h :. t) l = h :. t ++ l
 infixr 5 ++
@@ -192,8 +192,8 @@ flatten ::
   List (List a)
   -> List a
 flatten Nil = Nil
-flatten (Nil :. _) = Nil
-flatten ((h0 :. t0) :. Nil) = (h0 :. t0) ++ Nil
+flatten (Nil :. t) = flatten t
+flatten ((h :. t) :. Nil) = (h :. t)
 flatten ((h0 :. t0) :. (h1 :. t1)) = (h0 :. t0) ++ flatten (h1 :. t1)
 
 -- | Map a function then flatten to a list.
@@ -223,8 +223,52 @@ flatMap f (h :. t) = f h ++ flatMap f t
 flattenAgain ::
   List (List a)
   -> List a
-flattenAgain =
-  error "todo: Course.List#flattenAgain"
+flattenAgain Nil = Nil
+flattenAgain (Nil :. t) = flattenAgain t
+flattenAgain ((h :. t) :. Nil) = (h :. t)
+flattenAgain ((h :. t) :. (h1 :. t1)) = (h :. t) :. flatMap flattenAgain (h1 :. t1)
+--flattenAgain (h0 :. (h1 :. t1)) = h0 ++ flatMap flattenAgain (h1 :. t1)
+--
+--
+-- flattenAgain (h :. (h1 :. t1)) = h ++ flattenAgain (h1 :. t1)
+
+-- expand that list a to a list of list a
+-- flatmap takes a a -> list b
+-- pass flatMap 
+-- i want flatMap to unbox the elements in the list in the function
+-- i dont know how to describe that
+
+
+
+-- flattenAgain ((h0 :. t0) :. t1) = h0 ++ flatMap flatten ((h0 :. t0) :. t1)
+-- i think this entire type is bad?
+-- flattenAgain ((_ :. _) :. _) =
+
+-- flattenAgain (h0 :. (h1 :. t1)) = h0 ++ flatMap flattenAgain (h1 :. t1)
+-- i feel sad i dont get why the expected type and the actual type dont line up sometimes
+
+--
+-- flattenAgain = flatMap flatten
+-- flattenAgain (h :. t) = flatMap flatten (h :. t)
+--       Expected type: List (List (List a))
+--        Actual type: List (List a)
+-- prev
+-- flattenAgain ((h0 :. t0) :. t1) = flatMap flatten ((h0 :. t0) :. t1)
+-- flattenAgain ((h0 :. t0) :. t1) = flatMap (\x -> x) (h0 :. t0) t1
+-- flattenAgain (h :. t)
+-- i think here, i should be able to because i am not evaluating the arg everytime
+-- i should be able to take flatMap and pass it flatten and 'whatever it is' like:
+-- flattenAgain = flatMap flatten
+
+-- these didnt work
+-- which case of flatten would i pass a function to?
+-- once you hit a Nil you know the function is done?
+-- it exits somehow on Nil?
+-- i am totally lost as to why flatten doesnt go forever unless Nil somehow means
+-- stop executing...ohh youve build a program, and nil is the end of the execution
+-- set... i am an idiot
+
+
 
 -- | Convert a list of optional values to an optional list of values.
 --
