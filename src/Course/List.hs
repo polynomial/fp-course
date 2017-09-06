@@ -223,13 +223,15 @@ flatMap f (h :. t) = f h ++ flatMap f t
 flattenAgain ::
   List (List a)
   -> List a
-flattenAgain Nil = Nil
-flattenAgain (Nil :. t) = flattenAgain t
-flattenAgain ((h :. t) :. Nil) = (h :. t)
-flattenAgain ((h :. t) :. (h1 :. t1)) = (h :. t) :. flatMap flattenAgain (h1 :. t1)
---flattenAgain (h0 :. (h1 :. t1)) = h0 ++ flatMap flattenAgain (h1 :. t1)
---
---
+flattenAgain = flatMap (++)
+-- flattenAgain Nil = Nil
+-- flattenAgain (Nil :. t) = flattenAgain t
+-- flattenAgain ((h :. t) :. Nil) = (h :. t)
+
+-- flattenAgain ((h :. t) :. (h1 :. t1)) = (h :. t) ++ flatMap (++) h1 t1
+
+-- learning is slow sometimes
+-- flattenAgain (h0 :. (h1 :. t1)) = h0 ++ flatMap flattenAgain (h1 :. t1)
 -- flattenAgain (h :. (h1 :. t1)) = h ++ flattenAgain (h1 :. t1)
 
 -- expand that list a to a list of list a
