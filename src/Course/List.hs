@@ -223,12 +223,11 @@ flatMap f (h :. t) = f h ++ flatMap f t
 flattenAgain ::
   List (List a)
   -> List a
-flattenAgain = flatMap (++)
--- flattenAgain Nil = Nil
--- flattenAgain (Nil :. t) = flattenAgain t
--- flattenAgain ((h :. t) :. Nil) = (h :. t)
-
--- flattenAgain ((h :. t) :. (h1 :. t1)) = (h :. t) ++ flatMap (++) h1 t1
+-- flattenAgain = flatMap (++)
+flattenAgain Nil = Nil
+flattenAgain (Nil :. t) = flattenAgain t
+flattenAgain ((h :. t) :. Nil) = (h :. t)
+flattenAgain ((h :. t) :. (h1 :. t1)) = (h :. t) ++ flatMap (\x -> x)  (h1 :. t1)
 
 -- learning is slow sometimes
 -- flattenAgain (h0 :. (h1 :. t1)) = h0 ++ flatMap flattenAgain (h1 :. t1)
@@ -297,8 +296,8 @@ flattenAgain = flatMap (++)
 seqOptional ::
   List (Optional a)
   -> Optional (List a)
-seqOptional =
-  error "todo: Course.List#seqOptional"
+seqOptional (h :. t) = (h :. t)
+-- seqOptional (Optional a :. Optional a) = Nil
 
 -- | Find the first element in the list matching the predicate.
 --
