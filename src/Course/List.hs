@@ -224,10 +224,13 @@ flattenAgain ::
   List (List a)
   -> List a
 -- flattenAgain = flatMap (++)
+
 flattenAgain Nil = Nil
 flattenAgain (Nil :. t) = flattenAgain t
 flattenAgain ((h :. t) :. Nil) = (h :. t)
 flattenAgain ((h :. t) :. (h1 :. t1)) = (h :. t) ++ flatMap (\x -> x)  (h1 :. t1)
+-- also could be: ):
+-- flattenAgain = flatMap id
 
 -- learning is slow sometimes
 -- flattenAgain (h0 :. (h1 :. t1)) = h0 ++ flatMap flattenAgain (h1 :. t1)
@@ -296,7 +299,55 @@ flattenAgain ((h :. t) :. (h1 :. t1)) = (h :. t) ++ flatMap (\x -> x)  (h1 :. t1
 seqOptional ::
   List (Optional a)
   -> Optional (List a)
-seqOptional (h :. t) = (h :. t)
+seqOptional Nil = Full Nil
+-- two tests passing
+seqOptional (Empty :. _) = Empty
+--
+seqOptional (h :. t)
+  | length (h :. t) > length (filter notEmpty (h :. t)) = Empty
+  | Empty ?? h = (h :. t)
+  | otherwise = Empty
+--  | length (h :. t) > length (filter (const False) (h :. t)) = Empty
+
+-- three tests passing, but totally lame
+-- seqOptional (h :. t)
+--  | length (h :. t) > 0 = Empty
+
+
+
+-- seqOptional ((Full h) :. t)
+--  | length (filter (\x -> x) (map (?? Empty)) > 0 = Empty
+
+-- list
+-- iterate over list and see if anything is empty
+-- return Empty if so
+-- otherwise return list
+
+-- | otherwise = h :. seqOptional t
+--  | length (map (\x -> contains Empty x) l) > 0 = Empty
+--  | length (map (filter Empty) l) > 0 = Empty
+--  | otherwise = map (?? Empty) (h :. t)
+
+
+-- third:
+-- build a program that checks if a list has Empty, then return Empty
+-- if list doesnt contain empty, return the list
+
+-- second try:
+-- program will map contains over the list, if Empty return Empty, otherwise return list
+-- seqOptional (h :. t)
+--   | map (contains Empty) (h :. t) = Empty
+--   | otherwise = map (?? Empty) (h :. t)
+
+-- first pass:
+-- program will take a list and break it into pieces
+-- (h :. t)
+-- then the program will take those pieces and see if the head is Empty
+-- if Empty then return Empty
+-- if Full then proceed to next value
+-- Nil returns an empty list
+--
+
 -- seqOptional (Optional a :. Optional a) = Nil
 
 -- | Find the first element in the list matching the predicate.
