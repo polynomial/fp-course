@@ -300,13 +300,41 @@ seqOptional ::
   List (Optional a)
   -> Optional (List a)
 seqOptional Nil = Full Nil
--- two tests passing
 seqOptional (Empty :. _) = Empty
+--seqOptional (Full h :. Nil) = Full (h :. Nil)
+seqOptional ((Full _) :. (Empty :. _)) = Empty
+seqOptional ((Full h0) :. ((Full h1) :. t1)) = (seqOptional t1)
+seqOptional t1 
+--seqOptional ((Full h0) :. ((Full h1) :. t1)) = Full (h0 :. h1 :. Nil)
+
+--seqOptional (h0 :. h1 :. t1)
+--seqOptional ((Full h0) :. (h1 :. t1)) = Full (h0 :. seqOptional (h1 :. t1))
+
+-- seqOptional ((Full h) :. t) = seqOptional t
+
+--seqOptional ((Full h) :. t) = seqOptional t
+-- passes three, all emptys
+
+
+--seqOptional ((Full h) :. t) = Full (h :. t)
+--seqOptional ((Full h) :. t) = h :. flatMap (\x -> x ?? Nil) t
+--seqOptional ((Full h) :. t) = Full (h :. (map (\x -> x ?? Nil) t))
+--       Expected type: List (Optional (List t0))
+
+--seqOptional ((Full h) :. t) = Full h ++ seqOptional (Full t)
+--seqOptional ((Full h) :. t) = Full (flatten (map (\x -> (Full x) ?? Nil) t))
+-- seqOptional ((Full h) :. t) = Full (flatten (map (\x -> x ?? Nil) (h :. t)))
+
+-- seqOptional ( otherwise = flatten (map (\x -> x ?? Nil) (h :. t))
+-- seqOptional (h :. t) =
+--  if length (h :. t) > length (filter notEmpty (h :. t))
+--    then Empty
+--    else Empty
+
 --
-seqOptional (h :. t)
-  | length (h :. t) > length (filter notEmpty (h :. t)) = Empty
-  | Empty ?? h = (h :. t)
-  | otherwise = Empty
+--  | Empty ?? h = (h :. t)
+--  | otherwise = Empty
+--
 --  | length (h :. t) > length (filter (const False) (h :. t)) = Empty
 
 -- three tests passing, but totally lame
