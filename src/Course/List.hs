@@ -423,8 +423,9 @@ reverse ::
   List a
   -> List a
 -- ive started building a list with no nil terminator
-reverse (h :. b :. t) = reverse t :. (b :. h)
-reverse (h :. Nil) = h
+reverse (h :. b :. t) = reverse t ++ (b :. h :. Nil)
+-- reverse (h :. t :. Nil) = t :. h :. Nil
+reverse (h :. Nil) = h :. Nil
 reverse Nil = Nil
 
 -- i thought this was a not dumb attempt
@@ -458,8 +459,7 @@ produce f x = x :. produce f (f x)
 notReverse ::
   List a
   -> List a
-notReverse =
-  error "todo: Is it even possible?"
+notReverse (h :. Nil) = h :. Nil
 
 ---- End of list exercises
 
