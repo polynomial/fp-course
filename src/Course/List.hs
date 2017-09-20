@@ -35,9 +35,16 @@ data List t =
   Nil
   | t :. List t
   deriving (Eq, Ord)
-
 -- Right-associative
 infixr 5 :.
+
+-- The custom list type in reverse
+data Listr t =
+  Nilr
+  | Listr t :^ t
+  deriving (Eq, Ord)
+-- Right-associative
+infixr 5 :^
 
 instance Show t => Show (List t) where
   show = show . foldRight (:) []
@@ -390,10 +397,15 @@ find f (h :. t) =
 lengthGT4 ::
   List a
   -> Bool
-lengthGT4 l =
-  if length l > 4
-    then True
-    else False
+-- this passes the tests, but feels super lame, should revisit later
+lengthGT4 (_ :. _ :. _ :. _ :. _ :. _) = True
+lengthGT4 (_ :. _) = False
+lengthGT4 Nil = False
+-- fails infinity test
+-- lengthGT4 l =
+--   if length l > 4
+--     then True
+--     else False
 
 
 -- | Reverse a list.
@@ -410,8 +422,15 @@ lengthGT4 l =
 reverse ::
   List a
   -> List a
-reverse =
-  error "todo: Course.List#reverse"
+-- ive started building a list with no nil terminator
+reverse (h :. b :. t) = reverse t :. (b :. h)
+reverse (h :. Nil) = h
+reverse Nil = Nil
+
+-- i thought this was a not dumb attempt
+--reverse (h :. t) = (reverse t :^ h)
+-- i didnt think through the types in the definition ):
+
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
