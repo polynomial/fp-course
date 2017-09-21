@@ -460,6 +460,7 @@ notReverse ::
   List a
   -> List a
 notReverse (h :. Nil) = h :. Nil
+-- could have it return double the list? i guess from the type signature you cant really reason much about it
 
 ---- End of list exercises
 
