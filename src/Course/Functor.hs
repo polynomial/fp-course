@@ -69,7 +69,8 @@ instance Functor Optional where
     (a -> b)
     -> Optional a
     -> Optional b
-  (<$>) f a = Full (bindOptional f a)
+  (<$>) _ Empty = Empty
+  (<$>) f (Full a) = Full (f a)
 
 -- | Maps a function on the reader ((->) t) functor.
 --
@@ -80,8 +81,7 @@ instance Functor ((->) t) where
     (a -> b)
     -> ((->) t a)
     -> ((->) t b)
-  (<$>) =
-    error "todo: Course.Functor (<$>)#((->) t)"
+  (<$>) f0 f1 a = f0 (f1 a)
 
 -- | Anonymous map. Maps a constant value on a functor.
 --
@@ -96,8 +96,9 @@ instance Functor ((->) t) where
   a
   -> f b
   -> f a
-(<$) =
-  error "todo: Course.Functor#(<$)"
+(<$) a fa = (\_ -> a) <$> fa
+
+
 
 -- | Anonymous map producing unit value.
 --
@@ -116,8 +117,8 @@ void ::
   Functor f =>
   f a
   -> f ()
-void =
-  error "todo: Course.Functor#void"
+void fa = (\_ -> ()) <$> fa
+ 
 
 -----------------------
 -- SUPPORT LIBRARIES --
