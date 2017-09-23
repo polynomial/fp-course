@@ -83,7 +83,8 @@ instance Applicative List where
     List (a -> b)
     -> List a
     -> List b
-  (<*>) (h :. t) l = h <$> l <*> t
+  (<*>) Nil _ = Nil
+  (<*>) (f :. t) l = (map f l) ++ (<*>) t l
 
 -- | Insert into an Optional.
 --
@@ -101,14 +102,14 @@ instance Applicative Optional where
   pure ::
     a
     -> Optional a
-  pure =
-    error "todo: Course.Applicative pure#instance Optional"
+  pure = Full
   (<*>) ::
     Optional (a -> b)
     -> Optional a
     -> Optional b
-  (<*>) =
-    error "todo: Course.Apply (<*>)#instance Optional"
+  (<*>) Empty _ = Empty
+  (<*>) _ Empty = Empty
+  (<*>) (Full f) (Full a) = Full (f a)
 
 -- | Insert into a constant function.
 --
