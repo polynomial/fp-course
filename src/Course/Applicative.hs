@@ -273,8 +273,7 @@ lift4 abcde fa fb fc fd = abcde <$> fa <*> fb <*> fc <*> fd
   f a
   -> f b
   -> f b
-(*>) =
-  error "todo: Course.Applicative#(*>)"
+(*>) fa fb = fb <*> fa
 
 -- | Apply, discarding the value of the second argument.
 -- Pronounced, left apply.
