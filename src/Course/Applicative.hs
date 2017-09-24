@@ -133,15 +133,29 @@ instance Applicative ((->) t) where
   pure ::
     a
     -> ((->) t a)
-  pure =
-    error "todo: Course.Applicative pure#((->) t)"
+-- i think this can be rewritten as:
+-- pure :: a -> t -> a
+  pure a _ = a 
   (<*>) ::
     ((->) t (a -> b))
     -> ((->) t a)
     -> ((->) t b)
-  (<*>) =
-    error "todo: Course.Apply (<*>)#instance ((->) t)"
-
+-- i think this can be rewritten as
+--  (<*>) :: t -> (a -> b) -> t -> a -> t -> b
+-- or
+--  (<*>) :: t -> (a -> b) -> ta -> tb
+--  (<*>) :: t -> ab -> ta -> tb
+-- ghci
+--  (<*>) :: (t -> a -> b) -> (t -> a) -> t -> b
+-- >>> ((+) <*> (+5)) 3
+-- 11
+-- 3 +5 + 
+-- t ab t a t -> b
+-- +5 + 3
+-- ab (t0 t1)
+  (<*>) tab ta t = tab t (ta t)
+--  (<*>) t ab ta = ab (ta t)
+--  (<*>) tab ta = tab <*> ta
 
 -- | Apply a binary function in the environment.
 --
@@ -168,8 +182,7 @@ lift2 ::
   -> f a
   -> f b
   -> f c
-lift2 =
-  error "todo: Course.Applicative#lift2"
+lift2 abc fa fb = abc <$> fa <$> fb
 
 -- | Apply a ternary function in the environment.
 --
