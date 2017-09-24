@@ -158,6 +158,7 @@ instance Applicative ((->) t) where
 --  (<*>) tab ta = tab <*> ta
 
 -- | Apply a binary function in the environment.
+-- what is an environment?
 --
 -- >>> lift2 (+) (ExactlyOne 7) (ExactlyOne 8)
 -- ExactlyOne 15
@@ -182,7 +183,9 @@ lift2 ::
   -> f a
   -> f b
   -> f c
-lift2 abc fa fb = abc <$> fa <$> fb
+-- lift2 :: (a -> b -> c) -> f a -> f b -> f c
+
+lift2 abc fa fb = abc <$> fa <*> fb
 
 -- | Apply a ternary function in the environment.
 --
@@ -213,8 +216,7 @@ lift3 ::
   -> f b
   -> f c
   -> f d
-lift3 =
-  error "todo: Course.Applicative#lift3"
+lift3 abcd fa fb fc = abcd <$> fa <*> fb <*> fc
 
 -- | Apply a quaternary function in the environment.
 --
@@ -246,8 +248,7 @@ lift4 ::
   -> f c
   -> f d
   -> f e
-lift4 =
-  error "todo: Course.Applicative#lift4"
+lift4 abcde fa fb fc fd = abcde <$> fa <*> fb <*> fc <*> fd
 
 -- | Apply, discarding the value of the first argument.
 -- Pronounced, right apply.
