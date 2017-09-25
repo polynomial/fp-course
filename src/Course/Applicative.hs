@@ -327,9 +327,7 @@ sequence ::
   Applicative f =>
   List (f a)
   -> f (List a)
--- 
-sequence (h :. t) = (<$>) h :. sequence t
-
+sequence = foldRight (lift2 (:.)) (pure Nil)
 
 -- | Replicate an effect a given number of times.
 --
@@ -352,8 +350,23 @@ replicateA ::
   Int
   -> f a
   -> f (List a)
-replicateA =
-  error "todo: Course.Applicative#replicateA"
+replicateA i fa = sequence (replicate i fa)
+--replicateA _ fa = foldRight (lift2 (:.)) (pure Nil) (fa :. Nil)
+-- replicateA
+--   ExactlyOne:       FAIL
+--     expected: ExactlyOne ["hi","hi","hi","hi"]
+--      but got: ExactlyOne ["hi"]
+--   Optional - Full:  FAIL
+--     expected: Full ["hi","hi","hi","hi"]
+--      but got: Full ["hi"]
+--   Optional - Empty: OK
+--   (->):             FAIL
+--     expected: [10,10,10,10]
+--      but got: [10]
+--   List:             FAIL
+--     expected: ["aaa","aab","aac","aba","abb","abc","aca","acb","acc","baa","bab","bac","bba","bbb","bbc","bca","bcb","bcc","caa","cab","cac","cba","cbb","cbc","cca","ccb","ccc"]
+--      but got: ["a","b","c"]
+
 
 -- | Filter a list with a predicate that produces an effect.
 --
