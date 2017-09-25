@@ -48,7 +48,7 @@ infixl 4 <*>
   (a -> b)
   -> f a
   -> f b
-(<$$>) f fa = f <$> fa
+(<$$>) = (<$>)
 
 -- | Insert into ExactlyOne.
 --
@@ -133,14 +133,17 @@ instance Applicative ((->) t) where
   pure ::
     a
     -> ((->) t a)
--- i think this can be rewritten as:
--- pure :: a -> t -> a
   pure a _ = a 
   (<*>) ::
     ((->) t (a -> b))
     -> ((->) t a)
     -> ((->) t b)
+  (<*>) tab ta t = tab t (ta t)
+-- i think this can be rewritten as:
+-- pure :: a -> t -> a
+
 -- i think this can be rewritten as
+
 --  (<*>) :: t -> (a -> b) -> t -> a -> t -> b
 -- or
 --  (<*>) :: t -> (a -> b) -> ta -> tb
@@ -153,7 +156,6 @@ instance Applicative ((->) t) where
 -- t ab t a t -> b
 -- +5 + 3
 -- ab (t0 t1)
-  (<*>) tab ta t = tab t (ta t)
 --  (<*>) t ab ta = ab (ta t)
 --  (<*>) tab ta = tab <*> ta
 
@@ -273,7 +275,12 @@ lift4 abcde fa fb fc fd = abcde <$> fa <*> fb <*> fc <*> fd
   f a
   -> f b
   -> f b
-(*>) fa fb = fb <*> fa
+-- (*>) fa fb = lift2 (\_ -> \b -> b) fa fb
+(*>) = lift2 (\_ -> \b -> b)
+-- >>> lift2 (+) Empty (Full 8)
+--(*>) fa fb = lift2 (\_ -> b -> b) fa fb
+
+--(*>) fa = (<*>) (\_ -> fb)
 
 -- | Apply, discarding the value of the second argument.
 -- Pronounced, left apply.
@@ -298,8 +305,7 @@ lift4 abcde fa fb fc fd = abcde <$> fa <*> fb <*> fc <*> fd
   f b
   -> f a
   -> f b
-(<*) =
-  error "todo: Course.Applicative#(<*)"
+(<*) = lift2 (\a -> \_ -> a)
 
 -- | Sequences a list of structures to a structure of list.
 --
@@ -322,7 +328,6 @@ sequence ::
   List (f a)
   -> f (List a)
 sequence =
-  error "todo: Course.Applicative#sequence"
 
 -- | Replicate an effect a given number of times.
 --
