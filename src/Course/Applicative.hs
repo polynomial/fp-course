@@ -327,7 +327,9 @@ sequence ::
   Applicative f =>
   List (f a)
   -> f (List a)
-sequence =
+-- 
+sequence (h :. t) = (<$>) h :. sequence t
+
 
 -- | Replicate an effect a given number of times.
 --
