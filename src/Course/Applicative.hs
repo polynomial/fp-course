@@ -393,8 +393,11 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering =
-  error "todo: Course.Applicative#filtering"
+filtering afb l = pure (filter afb l)
+-- filtering afb = foldRight (twiceOptional (:.)) (pure Nil)
+--      Expected type: List a -> f (List a)
+--        Actual type: List (Optional a) -> Optional (List a)
+
 
 -----------------------
 -- SUPPORT LIBRARIES --
