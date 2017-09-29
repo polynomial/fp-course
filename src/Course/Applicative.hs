@@ -393,7 +393,36 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering afb l = pure (filter afb l)
+filtering _ Nil = (pure Nil)
+filtering afb (h :. t) = (afb <$> h) :. (filtering afb t)
+--filtering afb (h :. t) =
+--  if afb h
+--    then h :. filtering afb t
+--    else filtering afb t
+--    • Couldn't match expected type ‘Bool’ with actual type ‘f Bool’
+
+
+-- filtering afb l = map afb l
+--      Expected type: f (List a)
+--        Actual type: List (f Bool)
+
+-- filtering afb l = foldRight afb (pure Nil) l
+--       Expected type: a -> f (List a) -> f (List a)
+--        Actual type: a -> f Bool
+
+
+-- filtering afb l = foldRight (lift2 (:.) (replicateA (length l) afb)) (pure Nil) l
+--      Expected type: (a -> List (List (f Bool)))
+--                     -> f (List a) -> f (List a)
+--        Actual type: (a -> List (List (f Bool)))
+--                     -> a -> List (List (f Bool))
+
+
+-- filtering afb l = pure (filter afb l)
+--     • Couldn't match type ‘f Bool’ with ‘Bool’
+--      Expected type: a -> Bool
+--        Actual type: a -> f Bool
+
 -- filtering afb = foldRight (twiceOptional (:.)) (pure Nil)
 --      Expected type: List a -> f (List a)
 --        Actual type: List (Optional a) -> Optional (List a)
