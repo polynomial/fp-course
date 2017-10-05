@@ -395,59 +395,37 @@ filtering ::
   -> f (List a)
 filtering _ Nil = (pure Nil)
 
--- working through sequence because im not sure i fully grok it:
--- sequence ::
---   Applicative f =>
---   List (f a)
---   -> f (List a)
--- sequence = foldRight (lift2 (:.)) (pure Nil)
---
--- lift2 ::
---   Applicative f =>
---   (a -> b -> c)
---   -> f a
---   -> f b
---   -> f c
--- lift2 abc fa fb = abc <$> fa <*> fb
---
--- foldRight :: (a -> b -> b) -> b -> List a -> b
--- foldRight _ b Nil      = b
--- foldRight f b (h :. t) = f h (foldRight f b t)
---
--- data List t =
---   Nil
---   | t :. List t
---   deriving (Eq, Ord)
--- -- Right-associative
--- infixr 5 :.
---
---
--- foldRight :: (a -> b -> b) -> b -> List a -> b
--- sequence :: Course.Applicative.Applicative f => List (f a) -> f (List a)
--- lift2 :: Course.Applicative.Applicative f => (a -> b -> c) -> f a -> f b -> f c
---
--- sequence            = foldRight (lift2 (:.)) (pure Nil)
--- sequence l u        = foldRight (lift2 (:.)) (pure Nil) l
--- sequency List (f a) = foldRight (lift2 (:.)) (pure Nil) List (f a)
--- foldRight :: (a -> b -> b) -> b -> List a -> b
--- lift2 :: Applicative f => (a -> b -> c) -> f a -> f b -> f c
---
--- lift2 (:.) h (foldRight f b t)
---
---
---
--- i dont change it in the center
--- i tell it what i want on the input
--- and then i tell it what i want on the output
--- and i find things that match that, how it mutates, i dont care or know!
---
+-- filtering f l = 
+
+List a -> h :. t
+h :: a
+t :: List a
+f :: (a -> af Bool)
+
+map list... taking the h and applying f -> f Bool
+
+List a -> f List Bool -> f (List a)
+
+i think i need map filter and lift
+map ::
+  (a -> b)
+  -> List a
+  -> List b
+
+filter ::
+  (a -> Bool)
+  -> List a
+  -> List a
+
+lift2 ::
+  Applicative f =>
+  (a -> b -> c)
+  -> f a
+  -> f b
+  -> f c
 
 
 
--- List a -> h :. t
--- if (a -> f bool) h is true
--- then f h
--- else 
 
 -- (a -> f b) -> List a -> f (List a)
 -- (a -> f b) -> t a -> f (t a)
