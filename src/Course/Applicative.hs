@@ -394,36 +394,64 @@ filtering ::
   -> List a
   -> f (List a)
 filtering _ Nil = (pure Nil)
+-- filtering afb l = afb <$$> l
+
+-- >> (\a -> if a > 13 then Empty else Full (a <= 7)) <$> (4 :. 5 :. 6 :. 13 :. 14 :. Nil)
+-- [Full True,Full True,Full True,Full False,Empty]
+
+-- >> (const $ True :. True :.  Nil) <$> (1 :. 2 :. 3 :. Nil)
+-- [[True,True],[True,True],[True,True]]
+
+
+
+-- (a -> f Bool) -> List a -> f (List Bool)
+-- f (List Bool) -> List a -> f (List a)
+
+-- filtering afb l = lift2 (map (afb)) (pure Nil) l
+--       Expected type: List a -> a -> List a
+--        Actual type: List a -> List (f Bool)
+
+
+-- a list
+-- b f bool
+-- c f list a
+
+-- i want to take the list, map the a->f Bool over it
+-- i will then have a list and a list of f Bool
+-- now take list a apply list f bool and get f list a
 
 -- filtering f l = 
 
-List a -> h :. t
-h :: a
-t :: List a
-f :: (a -> af Bool)
-
-map list... taking the h and applying f -> f Bool
-
-List a -> f List Bool -> f (List a)
-
-i think i need map filter and lift
-map ::
-  (a -> b)
-  -> List a
-  -> List b
-
-filter ::
-  (a -> Bool)
-  -> List a
-  -> List a
-
-lift2 ::
-  Applicative f =>
-  (a -> b -> c)
-  -> f a
-  -> f b
-  -> f c
-
+-- List a -> h :. t
+-- h :: a
+-- t :: List a
+-- f :: (a -> f Bool)
+-- 
+-- map list... taking the h and applying f -> f Bool
+-- 
+-- f -> List a -> f (List Bool)
+-- List a -> f List Bool -> f List a
+-- 
+-- List a -> f List Bool -> f (List a)
+-- 
+-- i think i need map filter and lift
+-- map ::
+--   (a -> b)
+--   -> List a
+--   -> List b
+-- 
+-- filter ::
+--   (a -> Bool)
+--   -> List a
+--   -> List a
+-- 
+-- lift2 ::
+--   Applicative f =>
+--   (a -> b -> c)
+--   -> f a
+--   -> f b
+--   -> f c
+-- 
 
 
 
