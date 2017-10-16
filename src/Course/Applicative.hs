@@ -393,8 +393,9 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering _ Nil = (pure Nil)
--- filtering afb l = afb <$$> l
+--filtering _ Nil = (pure Nil)
+filtering afb l = foldRight (lift2 (:.)) (pure Nil) (l)
+--filtering afb = foldRight (\a -> afb <$$> a) (pure Nil)
 
 -- >> (\a -> if a > 13 then Empty else Full (a <= 7)) <$> (4 :. 5 :. 6 :. 13 :. 14 :. Nil)
 -- [Full True,Full True,Full True,Full False,Empty]
