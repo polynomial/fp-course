@@ -252,9 +252,11 @@ seqOptional ::
   -> Optional (List a)
 seqOptional xs = if f xs then Empty else Full (g xs)
   where
-  f (h :. t) = if h == Empty then True else f t
+  f (Empty :. _) = True
+  f (Full _ :. t) = f t
   f Nil = False
   g (Full a :. tail) = a :. g tail
+  g (Empty :. _) = Nil
   g Nil = Nil
 
 -- seqOptional xs = if (\f (h :. t) -> if contains h h then f t else True) xs then Empty else xs
@@ -279,8 +281,9 @@ find ::
   (a -> Bool)
   -> List a
   -> Optional a
-find =
-  error "todo: Course.List#find"
+find f (h :. t) = if (f h) then Full h else find f t
+find _ Nil = Empty
+
 
 -- | Determine if the length of the given list is greater than 4.
 --
@@ -298,8 +301,10 @@ find =
 lengthGT4 ::
   List a
   -> Bool
-lengthGT4 =
-  error "todo: Course.List#lengthGT4"
+lengthGT4 xs = if (f xs) then True else False
+  where
+  f (_ :. _ :. _ :. _ :. _ :. _) = True
+  f _ = False
 
 -- | Reverse a list.
 --
@@ -315,8 +320,7 @@ lengthGT4 =
 reverse ::
   List a
   -> List a
-reverse =
-  error "todo: Course.List#reverse"
+reverse (h :. t) = flatten (reverse t :. h)
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
