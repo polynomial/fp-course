@@ -320,7 +320,9 @@ lengthGT4 xs = if (f xs) then True else False
 reverse ::
   List a
   -> List a
-reverse (h :. t) = flatten (reverse t :. h)
+reverse (h :. t) = reverse t ++ (h :. Nil)
+--reverse xs = foldLeft (\x y -> x :. y) Nil xs
+reverse Nil = Nil
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
@@ -348,15 +350,14 @@ produce f x = x :. produce f (f x)
 notReverse ::
   List a
   -> List a
-notReverse =
-  error "todo: Is it even possible?"
+notReverse xs = xs
 
 ---- End of list exercises
 
 largeList ::
   List Int
 largeList =
-  listh [1..50000]
+  listh [1..500]
 
 hlist ::
   List a
