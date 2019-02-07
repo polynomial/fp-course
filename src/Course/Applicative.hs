@@ -70,7 +70,7 @@ instance Applicative List where
     -> List a
     -> List b
   (<*>) (fab :. t) (ah :. at) = (fab ah) :. (t <*> at)
-  (<*>) Nil (ah :. at) = (\x -> ah) :. (Nil <*> at)
+  (<*>) Nil (ah :. at) = ((\x -> x) ah) :. (Nil <*> at)
   (<*>) _ Nil = Nil
 
 -- | Insert into an Optional.
