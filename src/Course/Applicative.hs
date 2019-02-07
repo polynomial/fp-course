@@ -69,7 +69,9 @@ instance Applicative List where
     List (a -> b)
     -> List a
     -> List b
-  (<*>) lab la = 
+  (<*>) (fab :. t) (ah :. at) = (fab ah) :. (t <*> at)
+  (<*>) Nil (ah :. at) = (\x -> ah) :. (Nil <*> at)
+  (<*>) _ Nil = Nil
 
 -- | Insert into an Optional.
 --
