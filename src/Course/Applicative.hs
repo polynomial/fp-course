@@ -69,8 +69,9 @@ instance Applicative List where
     List (a -> b)
     -> List a
     -> List b
-  (<*>) (fab :. t) (ah :. at) = (fab ah) :. (t <*> at)
-  (<*>) Nil (ah :. at) = ((\x -> x) ah) :. (Nil <*> at)
+  (<*>) (fab :. t) la = map fab la ++ (t <*> la)
+  (<*>) (fab :. t) la = map fab la ++ (t <*> la)
+--  (<*>) Nil (ah :. at) = ((\x -> x) ah) :. (Nil <*> at)
   (<*>) _ Nil = Nil
 
 -- | Insert into an Optional.
