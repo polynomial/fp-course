@@ -78,13 +78,14 @@ instance Functor Optional where
 --
 -- >>> ((+1) <$> (*2)) 8
 -- 17
+--                vvv what does this do?
 instance Functor ((->) t) where
   (<$>) ::
     (a -> b)
+    --  vvvv what is this?
     -> ((->) t a)
     -> ((->) t b)
-  (<$>) =
-    error "todo: Course.Functor (<$>)#((->) t)"
+  (<$>) g a = g . a
 
 -- | Anonymous map. Maps a constant value on a functor.
 --
@@ -99,8 +100,7 @@ instance Functor ((->) t) where
   a
   -> f b
   -> f a
-(<$) =
-  error "todo: Course.Functor#(<$)"
+(<$) a fb = (<$>) (\_ -> a) fb
 
 -- | Anonymous map producing unit value.
 --
@@ -119,8 +119,7 @@ void ::
   Functor f =>
   f a
   -> f ()
-void =
-  error "todo: Course.Functor#void"
+void fa = (<$>) (\_ -> ()) fa
 
 -----------------------
 -- SUPPORT LIBRARIES --
