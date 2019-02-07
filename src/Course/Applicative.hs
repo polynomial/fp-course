@@ -70,8 +70,7 @@ instance Applicative List where
     -> List a
     -> List b
   (<*>) (fab :. t) la = map fab la ++ (t <*> la)
-  (<*>) (fab :. t) la = map fab la ++ (t <*> la)
---  (<*>) Nil (ah :. at) = ((\x -> x) ah) :. (Nil <*> at)
+  (<*>) Nil (_ :. _) = Nil
   (<*>) _ Nil = Nil
 
 -- | Insert into an Optional.
@@ -90,14 +89,14 @@ instance Applicative Optional where
   pure ::
     a
     -> Optional a
-  pure =
-    error "todo: Course.Applicative pure#instance Optional"
+  pure a = Full a
   (<*>) ::
     Optional (a -> b)
     -> Optional a
     -> Optional b
-  (<*>) =
-    error "todo: Course.Apply (<*>)#instance Optional"
+  (<*>) (Full fab) (Full a) = Full (fab a)
+  (<*>) (Full _) Empty = Empty
+  (<*>) Empty _ = Empty
 
 -- | Insert into a constant function.
 --
@@ -121,14 +120,12 @@ instance Applicative ((->) t) where
   pure ::
     a
     -> ((->) t a)
-  pure =
-    error "todo: Course.Applicative pure#((->) t)"
+  pure a _ = a
   (<*>) ::
     ((->) t (a -> b))
     -> ((->) t a)
     -> ((->) t b)
-  (<*>) =
-    error "todo: Course.Apply (<*>)#instance ((->) t)"
+  (<*>) tab = tab
 
 
 -- | Apply a binary function in the environment.
