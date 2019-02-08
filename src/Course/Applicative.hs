@@ -341,7 +341,7 @@ replicateA ::
   Int
   -> f a
   -> f (List a)
-replicateA =
+replicateA i fa = _
 
 -- | Filter a list with a predicate that produces an effect.
 --
