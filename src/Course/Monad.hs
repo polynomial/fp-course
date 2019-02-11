@@ -36,8 +36,7 @@ instance Monad ExactlyOne where
     (a -> ExactlyOne b)
     -> ExactlyOne a
     -> ExactlyOne b
-  (=<<) =
-    error "todo: Course.Monad (=<<)#instance ExactlyOne"
+  (=<<) aeob (ExactlyOne eoa) = aeob eoa
 
 -- | Binds a function on a List.
 --
@@ -48,8 +47,8 @@ instance Monad List where
     (a -> List b)
     -> List a
     -> List b
-  (=<<) =
-    error "todo: Course.Monad (=<<)#instance List"
+  (=<<) f (h :. xs) = f h ++ (f =<< xs)
+  (=<<) _ Nil = Nil
 
 -- | Binds a function on an Optional.
 --
@@ -60,8 +59,8 @@ instance Monad Optional where
     (a -> Optional b)
     -> Optional a
     -> Optional b
-  (=<<) =
-    error "todo: Course.Monad (=<<)#instance Optional"
+  (=<<) f (Full a) = f a
+  (=<<) _ Empty = Empty
 
 -- | Binds a function on the reader ((->) t).
 --
@@ -69,11 +68,14 @@ instance Monad Optional where
 -- 119
 instance Monad ((->) t) where
   (=<<) ::
-    (a -> ((->) t b))
-    -> ((->) t a)
-    -> ((->) t b)
-  (=<<) =
-    error "todo: Course.Monad (=<<)#instance ((->) t)"
+    --(a -> ((->) t b))
+    -- -> ((->) t a)
+    -- -> ((->) t b)
+    (a -> t -> b)
+    -> (t -> a)
+    -> (t -> b)
+  (=<<) atb ta = (\t -> (atb (ta t) t))
+  --(=<<) atb ta = atb ta
 
 -- | Witness that all things with (=<<) and (<$>) also have (<*>).
 --

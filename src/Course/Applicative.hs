@@ -341,7 +341,7 @@ replicateA ::
   Int
   -> f a
   -> f (List a)
-replicateA i fa = _
+replicateA i fa = if (i > 0) then lift2 (:.) fa (replicateA (i - 1) fa) else lift0 Nil
 
 -- | Filter a list with a predicate that produces an effect.
 --
@@ -368,8 +368,15 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering =
-  error "todo: Course.Applicative#filtering"
+filtering fb (h :. _) = ((\b -> if b then (h :. Nil) else Nil) <$> (fb h))
+-- this doesnt work^^ ):
+--filtering fb (h :. t) = (\b -> if h then lift2 (:.) (pure h) (filtering fb t) else (filtering fb t)) <$> (fb h)
+--filtering afB (h :. t) =
+--  if (lift2 afB h)
+--    then lift2 (:.) (pure h) (filtering afB t)
+--    else (filtering afB t)
+filtering _ Nil = lift0 Nil
+--filtering afB (h :. t) = lift2 (:.) (pure h) (filtering afB t)
 
 -----------------------
 -- SUPPORT LIBRARIES --
