@@ -85,16 +85,14 @@ printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile =
-  error "todo: Course.FileIO#printFile"
+printFile fp c = fmap (
 
 -- Given a list of (file name and file contents), print each.
 -- Use @printFile@.
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles =
-  error "todo: Course.FileIO#printFiles"
+printFiles (h :. t) = error ""
 
 -- Given a file name, return (file name and file contents).
 -- Use @readFile@.
@@ -109,8 +107,8 @@ getFile =
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
-getFiles =
-  error "todo: Course.FileIO#getFiles"
+getFiles = error ""
+--getFiles (fp :. t) = (,) fp ((=<<) readFile fp) :. getFiles t
 
 -- Given a file name, read it and for each line in that file, read and print contents of each.
 -- Use @getFiles@ and @printFiles@.

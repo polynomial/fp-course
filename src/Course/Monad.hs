@@ -162,6 +162,9 @@ infixl 1 >>=
   -> (a -> f b)
   -> a
   -> f c
+-- try with <$> and join
+--(<=<) bfc afb a =  <$> afb <$> _
+-- works
 (<=<) bfc afb a = ((>>=) ((>>=) (lift0 a) afb) bfc)
 
 infixr 1 <=<
