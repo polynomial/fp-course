@@ -122,7 +122,7 @@ getFiles fps = do
 run ::
   FilePath
   -> IO ()
-run fp = (lift0 (fp) >>= readFile >>= putStrLn ) --lines >>= getFiles >>= void)
+run fp = fp >>= readFile >>= _ >>= putStrLn --lines >>= getFiles >>= void)
 --  lof <- lines >>= (readFile fp) 
 --  void (getFiles lof)
 
@@ -130,7 +130,9 @@ run fp = (lift0 (fp) >>= readFile >>= putStrLn ) --lines >>= getFiles >>= void)
 -- /Tip:/ use @getArgs@ and @run@
 main ::
   IO ()
-main = void (getArgs >>= _)
+main = getArgs >>= run . headOr "/dev/null"
+--main = getArgs >>= pure . headOr "/dev/null" >>= run
+--main = getArgs >>= (\x -> lift0 (headOr "/dev/null" x)) >>= run
 
 ----
 
