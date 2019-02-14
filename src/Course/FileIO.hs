@@ -115,22 +115,22 @@ getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
 getFiles fps = do
-  sequence (
---getFiles Nil = _
+  sequence (getFile <$> fps)
 
 -- Given a file name, read it and for each line in that file, read and print contents of each.
 -- Use @getFiles@ and @printFiles@.
 run ::
   FilePath
   -> IO ()
-run =
-  error "todo: Course.FileIO#run"
+run fp = (lift0 (fp) >>= readFile >>= putStrLn ) --lines >>= getFiles >>= void)
+--  lof <- lines >>= (readFile fp) 
+--  void (getFiles lof)
+
 
 -- /Tip:/ use @getArgs@ and @run@
 main ::
   IO ()
-main =
-  error "todo: Course.FileIO#main"
+main = void (getArgs >>= _)
 
 ----
 
