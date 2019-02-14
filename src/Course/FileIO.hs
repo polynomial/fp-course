@@ -85,30 +85,38 @@ printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile fp c = fmap (
+printFile fp c = do
+  putStrLn ("========= " ++ fp)
+  --putStrLn fp
+  putStrLn c
 
 -- Given a list of (file name and file contents), print each.
 -- Use @printFile@.
 printFiles ::
   List (FilePath, Chars)
   -> IO ()
-printFiles (h :. t) = error ""
+printFiles ((fp,ch) :. t) = do
+  printFile fp ch
+  printFiles t
+printFiles Nil = pure ()
 
 -- Given a file name, return (file name and file contents).
 -- Use @readFile@.
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile =
-  error "todo: Course.FileIO#getFile"
+getFile fp = do
+  chars <- readFile fp
+  pure (fp,chars)
 
 -- Given a list of file names, return list of (file name and file contents).
 -- Use @getFile@.
 getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
-getFiles = error ""
---getFiles (fp :. t) = (,) fp ((=<<) readFile fp) :. getFiles t
+getFiles fps = do
+  sequence (
+--getFiles Nil = _
 
 -- Given a file name, read it and for each line in that file, read and print contents of each.
 -- Use @getFiles@ and @printFiles@.
