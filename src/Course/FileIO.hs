@@ -85,10 +85,10 @@ printFile ::
   FilePath
   -> Chars
   -> IO ()
-printFile fp c = do
-  putStrLn ("========= " ++ fp)
-  --putStrLn fp
-  putStrLn c
+--printFile fp c = do
+--  putStrLn ("========= " ++ fp)
+--  putStrLn c
+printFile fp c = putStrLn ("========= " ++ fp ++ "\n" ++ c)
 
 -- Given a list of (file name and file contents), print each.
 -- Use @printFile@.
@@ -105,9 +105,11 @@ printFiles Nil = pure ()
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
-getFile fp = do
-  chars <- readFile fp
-  pure (fp,chars)
+--getFile fp = do
+--  chars <- readFile fp
+--  pure (fp,chars)
+-- not working
+getFile fp = pure (fp,fp >>= readFile)
 
 -- Given a list of file names, return list of (file name and file contents).
 -- Use @getFile@.
