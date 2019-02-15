@@ -122,7 +122,7 @@ getFiles fps = do
 run ::
   FilePath
   -> IO ()
-run fp = fp >>= readFile >>= _ >>= putStrLn --lines >>= getFiles >>= void)
+run fp = (readFile fp) >>= getFiles . lines >>= printFiles
 --  lof <- lines >>= (readFile fp) 
 --  void (getFiles lof)
 
