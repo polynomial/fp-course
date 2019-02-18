@@ -1,0 +1,64 @@
+
+
+
+readFile | lines | getFiles | printFiles
+
+  getArgs :: IO (List Chars)
+  putStrLn :: Chars -> IO ()
+  readFile :: FilePath -> IO Chars
+  lines :: Chars -> List Chars
+  void :: IO a -> IO ()
+
+  fst :: (a, b) -> a
+  snd :: (a, b) -> b
+  (,) :: a -> b -> (a, b)
+
+
+
+(>>=) :: Monad f => f a -> (a -> f b) -> f b
+getFiles :: List FilePath -> IO (List (FilePath, Chars))
+getFile :: chars <- readFile fp pure (fp,chars)
+printFiles :: List (FilePath, Chars) -> IO ()
+printFile :: FilePath -> Chars -> IO ()
+run :: FilePath -> IO ()
+(.) :: (b -> c) -> (a -> b) -> a -> c
+headOr :: a -> List a -> a
+
+type FilePath = List Char
+
+(<**>) :: Monad f => f (a -> b) -> f a -> f b
+join :: Monad f => f (f a) -> f a
+(>>=) :: Monad f => f a -> (a -> f b) -> f b
+(<=<) :: Monad f => (b -> f c) -> (a -> f b) -> a -> f c
+lift2 :: Applicative f => (a -> b -> c) -> f a -> f b -> f c
+lift3 :: Applicative f => (a -> b -> c -> d) -> f a -> f b -> f c -> f d
+lift4 :: Applicative f => (a -> b -> c -> d -> e) -> f a -> f b -> f c -> f d -> f e
+lift0 :: Applicative f => a -> f a
+lift1 :: Applicative f => (a -> b) -> f a -> f b
+(*>) :: Applicative f => f a -> f b -> f b
+(<*) :: Applicative f => f b -> f a -> f b
+sequence :: Applicative f => List (f a) -> f (List a)
+replicateA :: Applicative f => Int -> f a -> f (List a)
+filtering :: Applicative f => (a -> f Bool) -> List a -> f (List a)
+(<$) :: Functor f => a -> f b -> f a
+void :: Functor f => f a -> f ()
+foldRight :: (a -> b -> b) -> b -> List a -> b
+foldLeft :: (b -> a -> b) -> b -> List a -> b
+headOr :: a -> List a -> a
+product :: List Int -> Int
+sum :: List Int -> Int
+length :: List a -> Int
+map :: (a -> b) -> List a -> List b
+filter :: (a -> Bool) -> List a -> List a
+(++) :: List a -> List a -> List a
+flatten :: List (List a) -> List a
+flatMap :: (a -> List b) -> List a -> List b
+flattenAgain :: List (List a) -> List a
+seqOptional :: List (Optional a) -> Optional (List a)
+find :: (a -> Bool) -> List a -> Optional a
+lengthGT4 :: List a -> Bool
+reverse :: List a -> List a
+produce :: (a -> a) -> a -> List a
+notReverse :: List a -> List a
+
+
