@@ -98,6 +98,7 @@ printFiles ::
 printFiles ((fp,ch) :. t) = do
   printFile fp ch
   printFiles t
+--printFiles ((f,c) :. t) = (printFiles t) . (printFile f c)
 printFiles Nil = pure ()
 
 -- Given a file name, return (file name and file contents).
@@ -105,11 +106,12 @@ printFiles Nil = pure ()
 getFile ::
   FilePath
   -> IO (FilePath, Chars)
---getFile fp = do
---  chars <- readFile fp
---  pure (fp,chars)
+getFile fp = do
+  chars <- readFile fp
+  pure (fp,chars)
 -- not working
-getFile fp = pure (fp,fp >>= readFile)
+--getFile fp = pure (fp,fp >>= readFile)
+
 
 -- Given a list of file names, return list of (file name and file contents).
 -- Use @getFile@.

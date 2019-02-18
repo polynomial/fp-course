@@ -34,31 +34,25 @@ newtype State s a =
 -- | Run the `State` seeded with `s` and retrieve the resulting state.
 --
 -- prop> \(Fun _ f) s -> exec (State f) s == snd (runState (State f) s)
-exec ::
-  State s a
-  -> s
-  -> s
-exec =
-  error "todo: Course.State#exec"
+exec :: State s a -> s -> s
+exec sa s = snd (runState sa s)
+-- it is curious to me that this type checks, id can always be used
+-- i think this means something, but i dont think i understand what
+-- yet
+--exec _ = id
 
 -- | Run the `State` seeded with `s` and retrieve the resulting value.
 --
 -- prop> \(Fun _ f) s -> eval (State f) s == fst (runState (State f) s)
-eval ::
-  State s a
-  -> s
-  -> a
-eval =
-  error "todo: Course.State#eval"
+eval :: State s a -> s -> a
+eval sa s = fst (runState sa s)
 
 -- | A `State` where the state also distributes into the produced value.
 --
 -- >>> runState get 0
 -- (0,0)
-get ::
-  State s s
-get =
-  error "todo: Course.State#get"
+get :: State s s
+get = (\s -> exec _ _)
 
 -- | A `State` where the resulting state is seeded with the given value.
 --
