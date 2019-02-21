@@ -368,8 +368,23 @@ filtering ::
   (a -> f Bool)
   -> List a
   -> f (List a)
-filtering fb (h :. _) = ((\b -> if b then (h :. Nil) else Nil) <$> (fb h))
--- this doesnt work^^ ):
+--a -> b -> c
+--(\a -> if 
+filtering afb xs = lift0 (g xs)
+  where
+  g (h :. t) = ((\b -> if b then (h :. (g t)) else Nil) <$> (afb h))
+  --g (h :. t) = ((\b -> if b then (h :. (g t)) else Nil) <$> (afb h))
+  --g Nil = lift0 Nil
+
+--((\b -> if b then (h :. t) else Nil) <$> (afb h))
+--filtering afb (h :. t) = ((\b -> if b then (h :. t) else Nil) <$> (afb h))
+--filtering afb (h :. t) = ((\b -> if b then (h :. (filtering afb t)) else Nil) <$> (afb h))
+--  where
+-- type checks but only does the first value:
+-- filtering fb (h :. t) = ((\b -> if b then (h :. Nil) else Nil) <$> (fb h))
+-- this doesnt type check ):
+--filtering afb (h :. t) = ((\b -> if b then (lift2 (:.) (pure h)(filtering afb t)) else (pure Nil)) <$> (afb h))
+
 --filtering fb (h :. t) = (\b -> if h then lift2 (:.) (pure h) (filtering fb t) else (filtering fb t)) <$> (fb h)
 --filtering afB (h :. t) =
 --  if (lift2 afB h)
