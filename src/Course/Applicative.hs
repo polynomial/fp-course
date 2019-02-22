@@ -364,7 +364,10 @@ replicateA i fa = if (i > 0) then lift2 (:.) fa (replicateA (i - 1) fa) else lif
 -- [[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
 --
 filtering :: Applicative f => (a -> f Bool) -> List a -> f (List a)
-filtering afb (h :. t) = lift0 (h :. t)
+filtering afb (h :. t) = ((\b -> if b then (lift2 (:.) h (filtering afb t)) else Nil) <$> (afb h))
+--filtering afb (h :. t) = lift0 (h :. t)
+--filtering afb (h :. t) = flatten ((\b -> if b then ((lift0 h) :. _) else _) <$> (afb h))
+
 --filtering afb (h :. t) = flatten ((\b -> if b then ((lift0 h) :. (_)) else (filtering afb t)) <$> (afb h))
 --filtering afb (h :. t) = flatten ((\b -> if b then ((lift0 h) :. (filtering afb t)) else (filtering afb t)) <$> (afb h))
 --filtering _ Nil = lift0 Nil
@@ -373,7 +376,7 @@ filtering afb (h :. t) = lift0 (h :. t)
 --a -> b -> c
 --(\a -> if 
 --filtering afb xs = g xs
-  where
+--  where
 --filtering afb xs = lift0 (g xs)
   -- vv type checks but returns the entire list
   --g (h :. t) = h :. (g t)
