@@ -363,18 +363,23 @@ replicateA i fa = if (i > 0) then lift2 (:.) fa (replicateA (i - 1) fa) else lif
 -- >>> filtering (const $ True :. True :.  Nil) (1 :. 2 :. 3 :. Nil)
 -- [[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3],[1,2,3]]
 --
-filtering ::
-  Applicative f =>
-  (a -> f Bool)
-  -> List a
-  -> f (List a)
+filtering :: Applicative f => (a -> f Bool) -> List a -> f (List a)
+filtering afb (h :. t) = lift0 (h :. t)
+--filtering afb (h :. t) = flatten ((\b -> if b then ((lift0 h) :. (_)) else (filtering afb t)) <$> (afb h))
+--filtering afb (h :. t) = flatten ((\b -> if b then ((lift0 h) :. (filtering afb t)) else (filtering afb t)) <$> (afb h))
+--filtering _ Nil = lift0 Nil
+--filtering afb (h :. t) = ((\b -> if b then (lift2 (:.) h (filtering afb t)) else Nil) <$> (afb h))
+
 --a -> b -> c
 --(\a -> if 
-filtering afb xs = lift0 (g xs)
+--filtering afb xs = g xs
   where
-  g (h :. t) = ((\b -> if b then (h :. (g t)) else Nil) <$> (afb h))
+--filtering afb xs = lift0 (g xs)
+  -- vv type checks but returns the entire list
+  --g (h :. t) = h :. (g t)
   --g (h :. t) = ((\b -> if b then (h :. (g t)) else Nil) <$> (afb h))
   --g Nil = lift0 Nil
+--filtering _ Nil = lift0 Nil
 
 --((\b -> if b then (h :. t) else Nil) <$> (afb h))
 --filtering afb (h :. t) = ((\b -> if b then (h :. t) else Nil) <$> (afb h))
@@ -390,7 +395,6 @@ filtering afb xs = lift0 (g xs)
 --  if (lift2 afB h)
 --    then lift2 (:.) (pure h) (filtering afB t)
 --    else (filtering afB t)
-filtering _ Nil = lift0 Nil
 --filtering afB (h :. t) = lift2 (:.) (pure h) (filtering afB t)
 
 -----------------------
