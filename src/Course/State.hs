@@ -120,8 +120,11 @@ findM ::
   (a -> f Bool)
   -> List a
   -> f (Optional a)
-findM =
-  error "todo: Course.State#findM"
+findM afb (h :. t) = (\b l -> if b then Full h else l) <$> (afb h) <*> (findM afb t)
+findM _ Nil = lift0 Empty
+
+-- if .. Full x
+--findM afb (h :. t) = (\x -> if x then Full h else (findM afb t)) <$> (afb h)
 
 -- | Find the first element in a `List` that repeats.
 -- It is possible that no element repeats, hence an `Optional` result.
