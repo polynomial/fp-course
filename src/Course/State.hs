@@ -94,10 +94,7 @@ instance Applicative (State s) where
 -- >>> let modify f = State (\s -> ((), f s)) in runState (modify (+1) >>= \() -> modify (*2)) 7
 -- ((),16)
 instance Monad (State s) where
-  (=<<) ::
-    (a -> State s b)
-    -> State s a
-    -> State s b
+  (=<<) :: (a -> State s b) -> State s a -> State s b
   (=<<) assb ssa = State (\s -> (eval (assb (eval ssa s)) (exec ssa s), exec (assb (eval ssa s)) (exec ssa s)))
   --(=<<) assb ssa = (\s -> (<$>) assb (_,_))
 
@@ -115,16 +112,13 @@ instance Monad (State s) where
 --
 -- >>> let p x = (\s -> (const $ pure (x == 'i')) =<< put (1+s)) =<< get in runState (findM p $ listh ['a'..'h']) 0
 -- (Empty,8)
-findM ::
-  Monad f =>
-  (a -> f Bool)
-  -> List a
-  -> f (Optional a)
-findM afb (h :. t) = (\b l -> if b then Full h else l) <$> (afb h) <*> (findM afb t)
+findM :: Monad f => (a -> f Bool) -> List a -> f (Optional a)
+findM afb (h :. t) = (\b oa -> if b then Full h else oa) <$> (afb h) <*> (findM afb t)
+-- <*> (findM afb t)
 findM _ Nil = lift0 Empty
 
--- if .. Full x
---findM afb (h :. t) = (\x -> if x then Full h else (findM afb t)) <$> (afb h)
+-- type checks, returns only Empty
+--findM afb (h :. t) = (\b _ -> if b then Full h else Empty) <$> (afb h) <*> (findM afb t)
 
 -- | Find the first element in a `List` that repeats.
 -- It is possible that no element repeats, hence an `Optional` result.
