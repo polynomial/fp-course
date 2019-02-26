@@ -113,8 +113,7 @@ instance Monad (State s) where
 -- >>> let p x = (\s -> (const $ pure (x == 'i')) =<< put (1+s)) =<< get in runState (findM p $ listh ['a'..'h']) 0
 -- (Empty,8)
 findM :: Monad f => (a -> f Bool) -> List a -> f (Optional a)
-findM afb (h :. t) = (\b oa -> if b then Full h else oa) <$> (afb h) <*> (findM afb t)
--- <*> (findM afb t)
+findM afb l = _
 findM _ Nil = lift0 Empty
 
 -- type checks, returns only Empty

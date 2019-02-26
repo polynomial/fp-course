@@ -71,10 +71,7 @@ foldLeft f b (h :. t) = let b' = f b h in b' `seq` foldLeft f b' t
 -- prop> \x -> x `headOr` infinity == 0
 --
 -- prop> \x -> x `headOr` Nil == x
-headOr ::
-  a
-  -> List a
-  -> a
+headOr :: a -> List a -> a
 headOr _ (b :. _) = b
 headOr a _ = a
 
@@ -88,9 +85,7 @@ headOr a _ = a
 --
 -- >>> product (1 :. 2 :. 3 :. 4 :. Nil)
 -- 24
-product ::
-  List Int
-  -> Int
+product :: List Int -> Int
 product (a :. b) = a * (product b)
 product Nil = 1
 
@@ -103,9 +98,7 @@ product Nil = 1
 -- 10
 --
 -- prop> \x -> foldLeft (-) (sum x) x == 0
-sum ::
-  List Int
-  -> Int
+sum :: List Int -> Int
 sum (a :. b) = a + (sum b)
 sum Nil = 0
 
@@ -115,9 +108,7 @@ sum Nil = 0
 -- 3
 --
 -- prop> \x -> sum (map (const 1) x) == length x
-length ::
-  List a
-  -> Int
+length :: List a -> Int
 length (_ :. b) = 1 + (length b)
 length Nil = 0
 
@@ -129,10 +120,7 @@ length Nil = 0
 -- prop> \x -> headOr x (map (+1) infinity) == 1
 --
 -- prop> \x -> map id x == x
-map ::
-  (a -> b)
-  -> List a
-  -> List b
+map :: (a -> b) -> List a -> List b
 map f (a :. b) = (f a) :. (map f b)
 map _ Nil = Nil
 
@@ -146,10 +134,7 @@ map _ Nil = Nil
 -- prop> \x -> filter (const True) x == x
 --
 -- prop> \x -> filter (const False) x == Nil
-filter ::
-  (a -> Bool)
-  -> List a
-  -> List a
+filter :: (a -> Bool) -> List a -> List a
 filter f (a :. b) = if (f a) then a :. (filter f b) else (filter f b)
 filter _ _ = Nil
  
@@ -166,10 +151,7 @@ filter _ _ = Nil
 -- prop> \x -> (x ++ y) ++ z == x ++ (y ++ z)
 --
 -- prop> \x -> x ++ Nil == x
-(++) ::
-  List a
-  -> List a
-  -> List a
+(++) :: List a -> List a -> List a
 (++) (a :. b) c = a :. (b ++ c)
 (++) Nil (c :. d) = c :. (d ++ Nil)
 -- (++) (a :. b) Nil = a :. (b ++ Nil)
@@ -187,9 +169,7 @@ infixr 5 ++
 -- prop> \x -> headOr x (flatten (y :. infinity :. Nil)) == headOr 0 y
 --
 -- prop> \x -> sum (map length x) == length (flatten x)
-flatten ::
-  List (List a)
-  -> List a
+flatten :: List (List a) -> List a
 flatten (a :. c) = a ++ flatten c
 --flatten (Nil :. (c :. d)) = c ++ flatten d
 --flatten (Nil :. Nil) = Nil
@@ -208,10 +188,7 @@ flatten Nil = Nil
 -- prop> \x -> headOr x (flatMap id (y :. infinity :. Nil)) == headOr 0 y
 --
 -- prop> \x -> flatMap id (x :: List (List Int)) == flatten x
-flatMap ::
-  (a -> List b)
-  -> List a
-  -> List b
+flatMap :: (a -> List b) -> List a -> List b
 flatMap f (xs :. xd) = (f xs) ++ flatMap f xd
 flatMap _ Nil = Nil
 
@@ -219,9 +196,7 @@ flatMap _ Nil = Nil
 -- HOWEVER, this time use the /flatMap/ function that you just wrote.
 --
 -- prop> \x -> let types = x :: List (List Int) in flatten x == flattenAgain x
-flattenAgain ::
-  List (List a)
-  -> List a
+flattenAgain :: List (List a) -> List a
 flattenAgain (a :. b) = a ++ flatMap (\x -> x ++ Nil) b
 flattenAgain Nil = Nil
 
@@ -247,9 +222,7 @@ flattenAgain Nil = Nil
 --
 -- >>> seqOptional (Empty :. map Full infinity)
 -- Empty
-seqOptional ::
-  List (Optional a)
-  -> Optional (List a)
+seqOptional :: List (Optional a) -> Optional (List a)
 seqOptional xs = if f xs then Empty else Full (g xs)
   where
   f (Empty :. _) = True
@@ -277,10 +250,7 @@ seqOptional xs = if f xs then Empty else Full (g xs)
 --
 -- >>> find (const True) infinity
 -- Full 0
-find ::
-  (a -> Bool)
-  -> List a
-  -> Optional a
+find :: (a -> Bool) -> List a -> Optional a
 find f (h :. t) = if (f h) then Full h else find f t
 find _ Nil = Empty
 
@@ -298,9 +268,7 @@ find _ Nil = Empty
 --
 -- >>> lengthGT4 infinity
 -- True
-lengthGT4 ::
-  List a
-  -> Bool
+lengthGT4 :: List a -> Bool
 lengthGT4 xs = if (f xs) then True else False
   where
   f (_ :. _ :. _ :. _ :. _ :. _) = True
@@ -317,9 +285,7 @@ lengthGT4 xs = if (f xs) then True else False
 -- prop> \x -> let types = x :: List Int in reverse x ++ reverse y == reverse (y ++ x)
 --
 -- prop> \x -> let types = x :: Int in reverse (x :. Nil) == x :. Nil
-reverse ::
-  List a
-  -> List a
+reverse :: List a -> List a
 reverse (h :. t) = reverse t ++ (h :. Nil)
 --reverse xs = foldLeft (\x y -> x :. y) Nil xs
 reverse Nil = Nil
@@ -332,10 +298,7 @@ reverse Nil = Nil
 --
 -- >>> let (x:.y:.z:.w:._) = produce (*2) 1 in [x,y,z,w]
 -- [1,2,4,8]
-produce ::
-  (a -> a)
-  -> a
-  -> List a
+produce :: (a -> a) -> a -> List a
 produce f x = x :. produce f (f x)
 
 -- | Do anything other than reverse a list.
@@ -347,9 +310,7 @@ produce f x = x :. produce f (f x)
 -- prop> \x -> let types = x :: List Int in notReverse x ++ notReverse y == notReverse (y ++ x)
 --
 -- prop> \x -> let types = x :: Int in notReverse (x :. Nil) == x :. Nil
-notReverse ::
-  List a
-  -> List a
+notReverse :: List a -> List a
 notReverse xs = xs
 
 ---- End of list exercises
